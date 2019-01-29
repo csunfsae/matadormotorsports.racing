@@ -28,8 +28,9 @@
         var ww = window.innerWidth,
             wh = window.innerHeight;
         function init() {
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene') });
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), alpha: true });
             renderer.setSize(ww, wh);
+            renderer.setClearColor(0x000000, 0);
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(100000, ww / wh, 0.1, 100000);
             camera.position.set(2 * ww, 0, 9 * ww);
