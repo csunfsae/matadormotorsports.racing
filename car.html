@@ -1,68 +1,97 @@
-<html <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset='utf-8' />
+    <title>CAR RTV</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css' rel='stylesheet' />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/127738/OBJLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-</head>
-<body>
-    <canvas id="scene"></canvas>
+
     <style>
-        body,
-        html {
-            width: 100%;
-            height: 100%;
-            padding: 0;
+        body {
             margin: 0;
-            overflow: hidden;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+        #scene{
+            position: absolute;
         }
     </style>
-    
+</head>
+
+<body>
+    <div id='map'></div>
+    <canvas id="scene"></canvas>
     <script>
-        var socket = io('https://api.matadormotorsports.racing');
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYTEzeGVteiIsImEiOiJjanJoZnEyOGUwOGplNDVucmNweDVvMGZiIn0.YQZVlws7EzU84cORWfNamg';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/a13xemz/cjrhgrxcl4roz2tptpxp4b49h',
+            center: [-118.528482, 34.242045],
+            zoom: 22.0,
+            pitch: 60.00,
+        });
+    </script>
+    <script>
+    var socket = io("https://api.matadormotorsports.racing");
         var renderer, scene, camera, car;
         var ww = window.innerWidth,
             wh = window.innerHeight;
         function init() {
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), alpha: true });
+            renderer = new THREE.WebGLRenderer({
+                canvas: document.getElementById("scene"),
+                alpha: true
+            });
             renderer.setSize(ww, wh);
             renderer.setClearColor(0x000000, 0);
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(100000, ww / wh, 0.1, 100000);
+            camera = new THREE.PerspectiveCamera(10000000, ww / wh, 0.1, 10000000);
             camera.position.set(2 * ww, 0, 9 * ww);
+            camera.zoom = 0.8;
+            camera.updateProjectionMatrix();
             scene.add(camera);
             loadOBJ();
         }
         var loadOBJ = function () {
             var manager = new THREE.LoadingManager();
             var loader = new THREE.OBJLoader(manager);
-            loader.load('https://dl.dropbox.com/s/vz7f8k8mymrgq6y/sae.obj', addcarInScene);
-
+            loader.load(
+                "https://dl.dropbox.com/s/vz7f8k8mymrgq6y/sae.obj",
+                addcarInScene
+            );
         };
         var addcarInScene = function (object) {
             car = object;
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
-                    child.material = new THREE.MeshNormalMaterial()
+                    child.material = new THREE.MeshNormalMaterial();
                 }
             });
-            car.rotation.x = (3 * Math.PI / 4);
-            car.rotation.y = (2 * Math.PI);
+            car.rotation.x = 3 * Math.PI / 4;
+            car.rotation.y = 2 * Math.PI;
             car.rotation.z = 0;
-            car.position.z = 0
+            car.position.z = 0;
             car.position.y = 4 * wh;
             // car.position.x = 1500;
             scene.add(car);
             render();
         };
-        var x, y, z = 0;
-        socket.on('gyroscope', function (data) {
-            x = car.rotation.x = (3 * (Math.PI / 4)) + data.x;
-            y = car.rotation.y = (2 * Math.PI) + data.y;
+        var x,
+            y,
+            z = 0;
+        socket.on("gyroscope", function (data) {
+            x = car.rotation.x = 3 * Math.PI / 4 + data.x;
+            y = car.rotation.y = 2 * Math.PI + data.y;
             z = car.rotation.z = 0 + data.z;
         });
         var render = function () {
@@ -70,6 +99,8 @@
             renderer.render(scene, camera);
         };
         init();
+
     </script>
 </body>
+
 </html>
