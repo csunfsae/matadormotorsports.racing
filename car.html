@@ -180,7 +180,7 @@
     </script>
     <script>
     var socket = io("https://api.matadormotorsports.racing");
-    io.on('connect', (socket) => {
+    socket.on('connect', (socket) => {
         $(".mapboxgl-map").show();
         $("scene").show();
     });
