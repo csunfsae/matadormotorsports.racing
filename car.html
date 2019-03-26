@@ -55,7 +55,7 @@
         renderer.setClearColor(0x000000, 0);
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(10000000000, ww / wh, 0.01, 10000000000);
-        camera.position.set(4 * ww, 0, 20 * ww);
+        camera.position.set(4 * ww, -2 * wh , 20 * ww);
         camera.zoom = 1;
         camera.updateProjectionMatrix();
         scene.add(camera);
