@@ -76,8 +76,8 @@
                 child.material = new THREE.MeshNormalMaterial();
             }
         });
-        car.rotation.x = 3 * Math.PI / 4;
-        car.rotation.y = 2 * Math.PI;
+        car.rotation.x = Math.PI;
+        car.rotation.y = 0;
         car.rotation.z = 0;
         car.position.z = 0;
         car.position.y = 4 * wh;
@@ -89,10 +89,9 @@
         y,
         z = 0;
     socket.on("gyroscope", function (data) {
-        // console.log(data);
-        x = car.rotation.x = 3 * Math.PI / 4 + data.x;
-        y = car.rotation.y = 2 * Math.PI + data.y;
-        // z = car.rotation.z = 0 + data.z;
+        x = car.rotation.x = data.x * Math.PI/180;
+        y = car.rotation.y = data.y * Math.PI/180;;
+        z = car.rotation.z = data.z * Math.PI/180;;
     });
     var render = function () {
         requestAnimationFrame(render);
